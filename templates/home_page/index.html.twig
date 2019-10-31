@@ -1,0 +1,20 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Page d''accueil{% endblock %}
+{% block navbar %}{% include 'navbar.html.twig' %}{% endblock %}
+
+{% block body %}
+<div class="container-fluid page-content">
+    <h1>Welcome Page</h1>
+    <div class="card container col-sm-6">
+        <div class="card-header">
+            Featured
+        </div>
+        <div class="card-body">
+            <h5 class="card-title">Bienvenue jeune internaute</h5>
+            <p class="card-text">Un bon petit formulaire de connexion avec une clé jwt ne serai pas mal.</p>
+            <a href="{{ path('user_index') }}" class="btn btn-primary">Voir la list complète des utilisateurs</a>
+        </div>
+    </div>
+</div>
+{% endblock %}
