@@ -34,8 +34,8 @@ class UserControllerTest extends ApiTestCase
         $data['json'] = [
             'firstname' => 'toto',
             'lastname' => 'toto',
-            'datecreate' => "2019-12-12T22:10:31+00:00",
-            'updatedate' => "2019-12-12T22:10:31+00:00"
+            'datecreate' => '2019-12-12T22:10:31+00:00',
+            'updatedate' => '2019-12-12T22:10:31+00:00'
         ];
         try {
             static::createClient()->request('POST', 'api/user', $data);
@@ -43,5 +43,15 @@ class UserControllerTest extends ApiTestCase
         }
 
         self::assertResponseHeaderNotSame('content-type', 'application/ld+json; charset=utf-8');
+    }
+
+    public function test_delete_succes()
+    {
+        try {
+            static::createClient()->request('DELETE', 'api/users/2');
+        } catch (TransportExceptionInterface $e) {
+        }
+
+        self::assertResponseStatusCodeSame(204, '');
     }
 }
