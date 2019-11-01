@@ -3,13 +3,22 @@
 
 namespace App\EventListener;
 
+use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\ExceptionEvent;
 use Symfony\Component\HttpKernel\Exception\HttpExceptionInterface;
 
 class ExceptionListener
 {
-    public function onKernelException(ExceptionEvent $event)
+    /** @var LoggerInterface $logger */
+    private $logger;
+    public function __construct(LoggerInterface $logger)
+    {
+        $this->logger = $logger;
+    }
+
+    /** @param ExceptionEvent $event */
+    public function onKernelException(ExceptionEvent $event): void
     {
         $exception = $event->getException();
         $message = sprintf(
@@ -26,6 +35,7 @@ class ExceptionListener
         } else {
             $response->setStatusCode(Response::HTTP_INTERNAL_SERVER_ERROR);
         }
+        $this->logger->error('UNE ERREUR MON POTE: '. $message);
         $event->setResponse($response);
     }
 }

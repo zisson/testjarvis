@@ -21,7 +21,7 @@
             {% for user in users %}
                 <tr>
                     <td>{{ user.id }}</td>
-                    <td>{{ user.firstname }}</td>
+                    <td><a href="{{ path('user_show', {'id': user.id}) }}">{{ user.firstname }}</a></td>
                     <td>{{ user.lastname }}</td>
                     <td>{{ user.datecreate ? user.datecreate|date('Y-m-d H:i:s') : '' }}</td>
                     <td>{{ user.updatedate ? user.updatedate|date('Y-m-d H:i:s') : '' }}</td>

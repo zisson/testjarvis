@@ -2,16 +2,20 @@
 
 namespace App\Controller;
 
+use App\Dictionnary\FlashDictionary;
 use App\Entity\User;
 use App\Form\UserType;
-use App\Service\FrontClientUserService;
+use App\Service\CreateUserService;
+use App\Service\DeleteUserService;
+use App\Service\ListUserService;
+use App\Service\ShowUserItemService;
+use App\Service\UpdateUserService;
+use Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Contracts\HttpClient\Exception\ClientExceptionInterface;
-use Symfony\Contracts\HttpClient\Exception\RedirectionExceptionInterface;
-use Symfony\Contracts\HttpClient\Exception\ServerExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 
 /**
@@ -19,51 +23,52 @@ use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
  */
 class UserController extends AbstractController
 {
-
-    /** @var FrontClientUserService $frontClientUserService */
-    private $frontClientUserService;
-
-    public function __construct(FrontClientUserService $frontClientUserService)
-    {
-        $this->frontClientUserService = $frontClientUserService;
-    }
-
     /**
      * @Route("/", name="user_index", methods={"GET"})
+     * @param ListUserService $listUserService
+     * @param User $user
      * @return Response
-     * @throws ClientExceptionInterface
-     * @throws RedirectionExceptionInterface
-     * @throws ServerExceptionInterface
-     * @throws TransportExceptionInterface
      */
-    public function index(): Response
+    public function index(ListUserService $listUserService): Response
     {
+        $user = new User();
         $baseUrl = $this->getParameter('base_url');
-        $response = $this->frontClientUserService->userGetList($baseUrl);
-        $data = $response->getContent();
+        $response = $listUserService->sendUserData($baseUrl, $user);
 
-        return $this->render('user/index.html.twig', [
-            'users' => json_decode($data, true),
-        ]);
+        if ($response) {
+            return $this->render('user/index.html.twig', [
+                'users' => json_decode($response, true),
+            ]);
+        }
+        return $this->redirectToRoute('error_exception');
     }
 
     /**
      * @Route("/new", name="user_new", methods={"GET","POST"})
      * @param Request $request
+     * @param CreateUserService $createUserService
      * @return Response
+     * @throws Exception
      * @throws TransportExceptionInterface
      */
-    public function new(Request $request): Response
+    public function new(Request $request, CreateUserService $createUserService): Response
     {
         $user = new User();
+
+        /*TODO Refacto */
         $form = $this->createForm(UserType::class, $user);
         $baseUrl = $this->getParameter('base_url');
-
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-            $this->frontClientUserService->sendDataToCreate($user, $baseUrl);
-            return $this->redirectToRoute('user_index');
+            $response = $createUserService->sendUserData($baseUrl, $user);
+            if ($response === JsonResponse::HTTP_CREATED) {
+                $this->addFlash('success', FlashDictionary::CREATE_USER_SUCCESS);
+                return $this->redirectToRoute('user_index');
+            }
+            $this->addFlash('error', FlashDictionary::CREATE_USER_ERROR);
         }
+
+
         return $this->render('user/new.html.twig', [
             'user' => $user,
             'form' => $form->createView(),
@@ -72,11 +77,19 @@ class UserController extends AbstractController
 
     /**
      * @Route("/{id}", name="user_show", methods={"GET"})
+     * @param User $user
+     * @param ShowUserItemService $showUserItemService
+     * @return Response
      */
-    public function show(User $user, FrontClientUserService $frontClientUserService): Response
+    public function show(User $user, ShowUserItemService $showUserItemService): Response
     {
+        $baseUrl = $this->getParameter('base_url');
+        $response = $showUserItemService->sendUserData($baseUrl, $user);
+        if (!$response) {
+            return $this->redirectToRoute('error_exception');
+        }
         return $this->render('user/show.html.twig', [
-            'user' => $user,
+            'user' => json_decode($response, true),
         ]);
     }
 
@@ -84,19 +97,25 @@ class UserController extends AbstractController
      * @Route("/{id}/edit", name="user_edit", methods={"GET","POST"})
      * @param Request $request
      * @param User $user
+     * @param UpdateUserService $updateUserService
      * @return Response
+     * @throws TransportExceptionInterface
      */
-    public function edit(Request $request, User $user): Response
+    public function edit(Request $request, User $user, UpdateUserService $updateUserService): Response
     {
         $form = $this->createForm(UserType::class, $user);
         $baseUrl = $this->getParameter('base_url');
+
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $this->frontClientUserService->sendDataToUpdate($user, $baseUrl);
-            return $this->redirectToRoute('user_index');
+            $response = $updateUserService->sendUserData($user, $baseUrl);
+            if ($response === JsonResponse::HTTP_OK) {
+                $this->addFlash('success', FlashDictionary::EDIT_SUCCESS);
+                return $this->redirectToRoute('user_index');
+            }
+            $this->addFlash('error', FlashDictionary::EDIT_ERROR);
         }
-
         return $this->render('user/edit.html.twig', [
             'user' => $user,
             'form' => $form->createView(),
@@ -105,15 +124,23 @@ class UserController extends AbstractController
 
     /**
      * @Route("/{id}", name="user_delete", methods={"DELETE"})
+     * @param Request $request
+     * @param User $user
+     * @param DeleteUserService $deleteUserService
+     * @return Response
+     * @throws TransportExceptionInterface
      */
-    public function delete(Request $request, User $user): Response
+    public function delete(Request $request, User $user, DeleteUserService $deleteUserService): Response
     {
+        $baseUrl = $this->getParameter('base_url');
         if ($this->isCsrfTokenValid('delete'.$user->getId(), $request->request->get('_token'))) {
-            $entityManager = $this->getDoctrine()->getManager();
-            $entityManager->remove($user);
-            $entityManager->flush();
+            $response = $deleteUserService->sendUserData($baseUrl, $user);
+            if ($response === JsonResponse::HTTP_OK) {
+                $this->addFlash('success', FlashDictionary::DELETE_SUCCESS);
+            } else {
+                $this->addFlash('error', FlashDictionary::DELETE_ERROR);
+            }
         }
-
         return $this->redirectToRoute('user_index');
     }
 }

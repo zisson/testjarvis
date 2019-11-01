@@ -1,0 +1,19 @@
+default:
+    suites:
+        default:
+            contexts:
+                - FeatureContext:
+                    kernel: '@kernel'
+                - WebContext
+
+    extensions:
+        Behat\MinkExtension:
+            base_url: http://localhost:8888/
+            browser_name: Safari
+            goutte: ~
+            selenium2:
+                wd_host: http://localhost:4444/wd/hub
+        Behat\Symfony2Extension:
+            kernel:
+                bootstrap: features/bootstrap/bootstrap.php
+                class: App\Kernel

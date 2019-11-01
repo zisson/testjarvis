@@ -1,0 +1,27 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}User index{% endblock %}
+{% block stylesheets %}
+    {{ parent() }}
+    {{ encore_entry_link_tags('css_min/build_css_error') }}
+{% endblock %}
+{% block navbar %}{% include 'navbar.html.twig' %}{% endblock %}
+
+{% block body %}
+    <div class="container-fluid page-content">
+        <div class="card text-center">
+            <div class="card-header">
+                <h1>Info maintenance</h1>
+            </div>
+            <div class="card-body">
+                <blockquote class="blockquote mb-0">
+                    <p>Un probleme est survenu. Veuillez nous excuser pour cette gene occasionnée</p>
+                    <footer class="blockquote-footer">pour revenir a la page d'acceuil <cite title="Source Title">
+                            <a class="nav-link" href="{{ path('home_page') }}">ICI</a></cite>
+                    </footer>
+                </blockquote>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

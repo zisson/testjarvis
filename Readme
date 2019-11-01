@@ -1,0 +1,44 @@
+Test Technique JARVIS: Mini projet API
+----------------------
+Peser sprint: [3] correspond a une demi journéé => 3h30mn
+    Mise en place de env dev
+    Features
+    Test
+
+Stack et versions:
+    PHP 7.2
+    Symfony 4.3
+    MariaDB
+    Api Plateform
+
+- 7 IHM (Interface Homme Machine)
+    Home
+    List user
+    user item show
+    Edit user
+    delete user
+    Create user
+    Exception front page
+
+- Api plateform pour les expositions Url Back Frontend
+- Component httpClient de symfony pour les appels Front
+- evenListener entity  ( Update, create, del) avec Log (Monolog) => app.log
+- log Doctrine => doctrine.log
+- gestion des exceptions avec log (Monolog) => exception.log
+
+Documentation API
+-----------------
+    Url: <localhost:port>/api
+
+test Fonctionnel et Unitaire
+----------------------------
+- Behat
+    configurer selenium2 pour ouvrir le browser
+    PS:
+    --
+        si en local : <localhost:4444>/wd/static/resource/hub
+        si machine distante: <ip_machine_en_local:4444>/wd/static/resource/hub
+        Usage: vendor/bin/behat
+
+- Php unit
+    Usage: php bin/phpunit

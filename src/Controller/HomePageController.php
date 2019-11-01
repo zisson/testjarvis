@@ -13,8 +13,14 @@ class HomePageController extends AbstractController
      */
     public function index(): Response
     {
-        return $this->render('home_page/index.html.twig', [
-            'controller_name' => 'HomePageController',
-        ]);
+        return $this->render('home_page/index.html.twig', []);
+    }
+
+    /**
+     * @Route("/exception", name="error_exception", methods={"GET"})
+     */
+    public function exception(): Response
+    {
+        return $this->render('error_exception.html.twig', []);
     }
 }

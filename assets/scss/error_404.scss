@@ -1,0 +1,17 @@
+@mixin background($imgpath,$position:0 0,$repeat: repeat) {
+    background: {
+    image: url($imgpath);
+    position: $position;
+    repeat: $repeat;
+  }
+}
+
+$font-stack: Helvetica, sans-serif;
+$primary-color: #333;
+
+body {
+  @include background('./../../assets/images/error_404_background.jpg');
+  font-family: $font-stack;
+  color: $primary-color;
+  font-size: 12px;
+}

@@ -25,6 +25,7 @@ Encore
      */
     .addEntry('js_min/build_js', './assets/js/app.js')
     .addEntry('css_min/build_css', './assets/scss/runtime.scss')
+    .addEntry('css_min/build_css_error', './assets/scss/error_404.scss')
 
     // When enabled, Webpack "splits" your files into smaller pieces for greater optimization.
     .splitEntryChunks()
