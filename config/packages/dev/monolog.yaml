@@ -10,11 +10,6 @@ monolog:
             type: stream
             path: '%kernel.logs_dir%/app.log'
             channels: [app]
-        error:
-            level: error
-            type: stream
-            path: '%kernel.logs_dir%/error.log'
-            channels: [app]
         main:
             type: stream
             path: "%kernel.logs_dir%/%kernel.environment%.log"

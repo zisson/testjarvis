@@ -8,7 +8,6 @@ use App\Dictionnary\ApiEndpointDictionary;
 use App\Entity\User;
 use App\Interfaces\SendDataInterface;
 use DateTime;
-use Exception;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Form\Exception\TransformationFailedException;
 use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
@@ -30,10 +29,9 @@ class UpdateUserService implements SendDataInterface
     }
 
     /**
-     * @param User $user
      * @param string $baseUrl
-     * @return bool
-     * @throws Exception
+     * @param User $user
+     * @return int
      * @throws TransportExceptionInterface
      */
     public function sendUserData(string $baseUrl, User $user): int

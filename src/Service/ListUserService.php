@@ -41,7 +41,7 @@ class ListUserService implements SendDataInterface
     public function sendUserData(string $baseUrl, User $user): string
     {
         try {
-            $response = $this->httpClient->request('GET', $baseUrl . ApiEndpointDictionary::API_USERS_GET_LIST);
+            $response = $this->httpClient->request('GET', $baseUrl . ApiEndpointDictionary::API_USERS_GET_COLLECTION);
             return $response->getContent();
         } catch (TransportExceptionInterface $e) {
             throw new TransformationFailedException('Response Failed ' . $e->getMessage());
