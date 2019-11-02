@@ -1,19 +1,14 @@
 monolog:
     handlers:
         doctrine:
-            level: debug
+            action_level: info
             type: stream
             path: '%kernel.logs_dir%/doctrine.log'
             channels: [doctrine]
         app:
-            level: debug
+            action_level: debug
             type: stream
             path: '%kernel.logs_dir%/app.log'
-            channels: [app]
-        error:
-            level: error
-            type: stream
-            path: '%kernel.logs_dir%/error.log'
             channels: [app]
         main:
             type: fingers_crossed

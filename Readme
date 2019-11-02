@@ -10,6 +10,8 @@ Stack et versions:
     Symfony 4.3
     MariaDB
     Api Plateform
+    Behat
+    phpUnit
 
 - 7 IHM (Interface Homme Machine)
     Home
