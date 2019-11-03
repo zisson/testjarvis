@@ -28,6 +28,10 @@ Stack et versions:
 - log Doctrine => doctrine.log
 - gestion des exceptions avec log (Monolog) => exception.log
 
+DataFixtures
+-------------
+    - php bin/console doctrine:fixtures:load
+
 Wepacke Encore
 --------------
     - un coup de yarn encore <test|prod>
@@ -36,6 +40,7 @@ Documentation API
 -----------------
     Url: <localhost:port>/api
 
+***********  BONUS **************
 test Fonctionnel et Unitaire
 ----------------------------
 - Behat

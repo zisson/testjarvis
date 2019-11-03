@@ -70,7 +70,7 @@ class UserController extends UserFormFactoryController
     }
 
     /**
-     * @Route("/{id}", name="user_show", methods={"GET"})
+     * @Route("/{id}", name="user_show", methods={"GET"}, requirements={"id"="\d+"})
      * @param User $user
      * @param ShowUserItemService $showUserItemService
      * @return Response
@@ -88,7 +88,7 @@ class UserController extends UserFormFactoryController
     }
 
     /**
-     * @Route("/{id}/edit", name="user_edit", methods={"GET","POST"})
+     * @Route("/{id}/edit", name="user_edit", methods={"GET","POST"}, requirements={"id"="\d+"})
      * @param Request $request
      * @param User $user
      * @param UpdateUserService $updateUserService

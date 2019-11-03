@@ -32,3 +32,11 @@ Feature:
     Then the response status code should be 200
     And I should be on "/user/"
     And I should see "User Lists"
+
+  Scenario: navigate with back list link
+    Given I am on "/user"
+    When I follow "tutu"
+    Then I should see "User tutu"
+    When I follow "back to list"
+    And I should be on "/user/"
+    And I should see "User Lists"
