@@ -40,3 +40,10 @@ Feature:
     When I follow "back to list"
     And I should be on "/user/"
     And I should see "User Lists"
+
+  Scenario: exception page
+    Given I am on "/user/42"
+    Then I should see "Info maintenance"
+    When I follow "ICI"
+    And I should be on homepage
+    And I should see "Welcome Page"
